@@ -1,0 +1,51 @@
+<?php
+/*
+ * For work with sets, fast exclude sets on PHP
+ */
+
+class EliminateSets {
+    private $names = array(); 
+    public function load($arr, $name) {
+        $this->names[$name] = $arr;
+      
+    }
+    public function getEliminate($nameBase, $nameDeductible) {
+        
+        //make a Map
+        
+        $mapBase = array();
+        foreach($this->names[$nameBase] as $item_id) {
+            $mapBase[$item_id] = 1;
+        }
+        
+        $mapDeductible = array();
+        foreach($this->names[$nameDeductible] as $item_id) {
+            $mapDeductible[$item_id] = 1;
+        }
+        
+        $eliminateArr = array();
+        
+        // From $nameBase to exclude $nameDeductible
+        
+        foreach($mapBase as $base_item_id => $val) {
+            if(!isset($mapDeductible[$base_item_id])) {
+                $eliminateArr[]=$base_item_id;
+            }
+        }
+        return $eliminateArr;
+        
+    }
+    
+    public function removeRepetition($name, $val) {
+        /*
+         * If count of repetition more than $value then to delete all item_id
+         */
+    }
+}
+
+/*
+    $el = new EliminateSets();
+    $el->load(array(1,2,3), 'A');
+    $el->load(array(2,3), 'B');
+    print_r($el->getEliminate('A', "B"));
+ */
