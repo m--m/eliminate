@@ -4,43 +4,93 @@
  */
 
 class EliminateSets {
-    private $names = array(); 
+
+    private $names = array();
+
     public function load($arr, $name) {
         $this->names[$name] = $arr;
-      
     }
+    
+    public function clean($name) {
+        unset($this->names[$name]);
+    }
+
     public function getEliminate($nameBase, $nameDeductible) {
-        
+
         //make a Map
-        
+
         $mapBase = array();
-        foreach($this->names[$nameBase] as $item_id) {
+        foreach ($this->names[$nameBase] as $item_id) {
             $mapBase[$item_id] = 1;
         }
-        
+	unset($this->names[$nameBase]);
         $mapDeductible = array();
-        foreach($this->names[$nameDeductible] as $item_id) {
+        foreach ($this->names[$nameDeductible] as $item_id) {
             $mapDeductible[$item_id] = 1;
         }
-        
+
         $eliminateArr = array();
-        
+
         // From $nameBase to exclude $nameDeductible
-        
-        foreach($mapBase as $base_item_id => $val) {
-            if(!isset($mapDeductible[$base_item_id])) {
-                $eliminateArr[]=$base_item_id;
+
+        foreach ($mapBase as $base_item_id => $val) {
+            if (!isset($mapDeductible[$base_item_id])) {
+                $eliminateArr[] = $base_item_id;
             }
         }
         return $eliminateArr;
-        
     }
     
-    public function removeRepetition($name, $val) {
+    public function getIntersection($nameBase, $nameDeductible) {
+
+        //make a Map
+
+        $mapBase = array();
+        foreach ($this->names[$nameBase] as $item_id) {
+            $mapBase[$item_id] = 1;
+        }
+
+        $mapDeductible = array();
+        foreach ($this->names[$nameDeductible] as $item_id) {
+            $mapDeductible[$item_id] = 1;
+        }
+
+        $eliminateArr = array();
+
+        // From $nameBase to exclude $nameDeductible
+
+        foreach ($mapBase as $base_item_id => $val) {
+            if (isset($mapDeductible[$base_item_id])) {
+                $eliminateArr[] = $base_item_id;
+            }
+        }
+        return $eliminateArr;
+    }
+
+    public function getSet($name) {
+        return $this->names[$name];
+    }
+
+    public function removeRepetition($name, $minVal, $maxVal) {
         /*
          * If count of repetition more than $value then to delete all item_id
          */
+        $arr = array();
+        foreach ($this->names[$name] as $item_id) {
+            @$arr[$item_id] ++;
+        }
+
+        $newArr = array();
+        foreach ($arr as $item_id => $val) {
+            if ($val < $maxVal && $val >= $minVal) {
+                for ($i = 1; $i <= $val; $i++) {
+                    $newArr[] = $item_id;
+                }
+            }
+        }
+        return $newArr;
     }
+
 }
 
 /*
